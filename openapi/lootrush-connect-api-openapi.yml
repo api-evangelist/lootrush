@@ -1,0 +1,169 @@
+openapi: 3.1.0
+info:
+  title: LootRush Partner Connect API
+  description: 'REST endpoints for LootRush partner integrations: crypto withdrawals, transaction history, and OAuth-style user data access.'
+  version: 1.0.0
+servers:
+- url: https://third-party.lootrush.com
+  description: Third-party API (Withdraw, Connect)
+- url: https://history-api.lootrush.com
+  description: History API
+security:
+- bearerAuth: []
+tags:
+- name: Connect
+paths:
+  /api/v1/consent/{consentId}/user:
+    get:
+      operationId: getConsentUser
+      summary: Get consented user data
+      description: Retrieves user data for a granted consent. Authenticated with an integration API key via the x-api-key header, not a bearer token.
+      tags:
+      - Connect
+      servers:
+      - url: https://third-party.lootrush.com
+      security:
+      - apiKeyAuth: []
+      parameters:
+      - name: consentId
+        in: path
+        required: true
+        description: Consent ID received after the user granted access.
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Consented user data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  consent_id:
+                    type: string
+                    format: uuid
+                  integration_id:
+                    type: string
+                    format: uuid
+                  granted_at:
+                    type: string
+                    format: date-time
+                  scopes:
+                    type: array
+                    items:
+                      type: string
+                      enum:
+                      - profile
+                      - email
+                      - wallet
+                      - kyc
+                  user:
+                    type: object
+                    properties:
+                      profile:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                          given_name:
+                            type: string
+                          family_name:
+                            type: string
+                      email:
+                        type: object
+                        properties:
+                          address:
+                            type: string
+                            format: email
+                          verified:
+                            type: boolean
+                      wallet:
+                        type: object
+                        properties:
+                          addresses:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                chain:
+                                  type: string
+                                  enum:
+                                  - base
+                                  - polygon
+                                address:
+                                  type: string
+                          is_business:
+                            type: boolean
+                      kyc:
+                        type: object
+                        properties:
+                          email:
+                            type: string
+                          entity_type:
+                            type: string
+                            enum:
+                            - individual
+                            - business
+                          first_name:
+                            type: string
+                          last_name:
+                            type: string
+                          legal_name:
+                            type: string
+                            nullable: true
+                          document_type:
+                            type: string
+                          document_number:
+                            type: string
+                          tax_id:
+                            type: string
+        '401':
+          description: Invalid or missing API key.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: The consent belongs to a different integration.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Consent not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '410':
+          description: Consent has been revoked.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'Gone: Consent has been revoked'
+                  revoked_at:
+                    type: string
+                    format: date-time
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Message describing what went wrong.
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: 'API token issued by your LootRush account manager. Sent as `Authorization: Bearer <token>`.'
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: Integration API key provided by LootRush during Connect registration.

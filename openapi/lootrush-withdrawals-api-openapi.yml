@@ -1,0 +1,267 @@
+openapi: 3.1.0
+info:
+  title: LootRush Partner Connect Withdrawals API
+  description: 'REST endpoints for LootRush partner integrations: crypto withdrawals, transaction history, and OAuth-style user data access.'
+  version: 1.0.0
+servers:
+- url: https://third-party.lootrush.com
+  description: Third-party API (Withdraw, Connect)
+- url: https://history-api.lootrush.com
+  description: History API
+security:
+- bearerAuth: []
+tags:
+- name: Withdrawals
+paths:
+  /api/crypto/{userId}/withdraw:
+    post:
+      operationId: createWithdrawal
+      summary: Create withdrawal
+      description: Initiates a cryptocurrency withdrawal for a user. The withdrawal is created as a queued transaction and processed asynchronously.
+      tags:
+      - Withdrawals
+      servers:
+      - url: https://third-party.lootrush.com
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier of the user making the withdrawal.
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - amount
+              - to
+              properties:
+                amount:
+                  type: string
+                  description: Amount to withdraw. Sent as a string to preserve decimal precision.
+                  example: '100.50'
+                currency:
+                  type: string
+                  description: Cryptocurrency to withdraw.
+                  default: USDT
+                  examples:
+                  - USDT
+                  - USDC
+                  - EURC
+                network:
+                  type: string
+                  description: Blockchain network.
+                  default: polygon
+                  examples:
+                  - polygon
+                  - ethereum
+                  - base
+                to:
+                  type: string
+                  description: 'Recipient identifier: an email address, a user ID (UUID), or a wallet address (0x-prefixed, 42 chars). Emails and user IDs resolve to the user''s verified smart wallet; a wallet address is used as-is.'
+                  example: '0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb2'
+                externalId:
+                  type: string
+                  description: Optional external identifier for tracking this withdrawal in your system.
+                  example: withdraw-12345
+      responses:
+        '200':
+          description: Withdrawal queued.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Withdraw created as queued
+                  data:
+                    type: object
+                    properties:
+                      bulkId:
+                        type: string
+                        format: uuid
+                        description: Identifier for the bulk payment operation.
+                      externalId:
+                        type: string
+                        description: The external identifier you provided, if any.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          description: The recipient wallet is blocked from receiving tokens.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: User not found, recipient could not be resolved, or wallet not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/crypto/{userId}/withdraws:
+    get:
+      operationId: listWithdrawals
+      summary: List withdrawals
+      description: Retrieves a paginated list of withdrawal transactions for a user, with optional filters.
+      tags:
+      - Withdrawals
+      servers:
+      - url: https://third-party.lootrush.com
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        description: Unique identifier of the user whose withdrawals to retrieve.
+        schema:
+          type: string
+          format: uuid
+      - name: page
+        in: query
+        description: Page number (1-indexed).
+        schema:
+          type: integer
+          default: 1
+      - name: perPage
+        in: query
+        description: Results per page.
+        schema:
+          type: integer
+          default: 20
+          maximum: 200
+      - name: bulkId
+        in: query
+        description: Filter by bulk payment ID.
+        schema:
+          type: string
+          format: uuid
+      - name: transactionHash
+        in: query
+        description: Filter by blockchain transaction hash.
+        schema:
+          type: string
+      - name: status
+        in: query
+        description: Filter by withdrawal status.
+        schema:
+          type: string
+          examples:
+          - queued
+          - pending
+          - processing
+          - completed
+          - failed
+      - name: externalId
+        in: query
+        description: Filter by the external identifier you provided.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A page of withdrawals.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      withdraws:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Withdrawal'
+                      pageInfo:
+                        type: object
+                        properties:
+                          limit:
+                            type: integer
+                          offset:
+                            type: integer
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: User not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Message describing what went wrong.
+    Withdrawal:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Entry ID.
+        bulkId:
+          type: string
+          format: uuid
+          description: Bulk payment ID.
+        status:
+          type: string
+          description: Current status of the withdrawal entry.
+        amountToPayToken:
+          type: string
+          description: Amount to be paid (string for precision).
+        outCurrencyIsoCode:
+          type: string
+          description: Currency code (e.g. USDT).
+        toAddress:
+          type: string
+          description: Recipient wallet address.
+        externalId:
+          type: string
+          description: External identifier, if provided.
+          nullable: true
+        transactionHash:
+          type: string
+          description: Blockchain transaction hash once processed.
+          nullable: true
+        transferTokenStatus:
+          type: string
+          description: On-chain transfer status.
+          nullable: true
+        errorMessage:
+          type: string
+          description: Error message if the withdrawal failed.
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+  responses:
+    Unauthorized:
+      description: Invalid or missing API token, or user not allowed.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: 'API token issued by your LootRush account manager. Sent as `Authorization: Bearer <token>`.'
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: Integration API key provided by LootRush during Connect registration.

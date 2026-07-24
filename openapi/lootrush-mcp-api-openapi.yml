@@ -1,0 +1,312 @@
+openapi: 3.1.0
+info:
+  title: LootRush Partner Connect MCP API
+  description: 'REST endpoints for LootRush partner integrations: crypto withdrawals, transaction history, and OAuth-style user data access.'
+  version: 1.0.0
+servers:
+- url: https://third-party.lootrush.com
+  description: Third-party API (Withdraw, Connect)
+- url: https://history-api.lootrush.com
+  description: History API
+security:
+- bearerAuth: []
+tags:
+- name: MCP
+paths:
+  /mcp:
+    post:
+      operationId: callMcpTool
+      summary: Call an MCP tool
+      description: JSON-RPC 2.0 endpoint for the MCP server. Set `method` to `tools/call` and `params.name` to one of `getAccountBalance`, `getAccountHistory`, `getUserCards`, `getUserCardTransactions`, `getCardRevealPublicKey`. Pick a tool from the request examples below. The tool's payload comes back as a JSON-encoded string in `result.content[0].text`. Every call is scoped to the API key's user — no tool takes an identity argument. Batch (array) bodies are rejected. `getUserCards` with `includeCardSecrets` reveals a card's PAN/CVV **encrypted** (the server never decrypts) and needs a `sessionId` built from `getCardRevealPublicKey`.
+      tags:
+      - MCP
+      servers:
+      - url: https://mcp.lootrush.com
+      security:
+      - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/McpCall'
+            examples:
+              getAccountBalance:
+                summary: getAccountBalance
+                value:
+                  jsonrpc: '2.0'
+                  id: 1
+                  method: tools/call
+                  params:
+                    name: getAccountBalance
+                    arguments: {}
+              getAccountHistory — by hash:
+                summary: getAccountHistory (single transaction by hash)
+                value:
+                  jsonrpc: '2.0'
+                  id: 2
+                  method: tools/call
+                  params:
+                    name: getAccountHistory
+                    arguments:
+                      filterByHash: 0x9f2c...ab12
+              getAccountHistory — window:
+                summary: getAccountHistory (date window)
+                value:
+                  jsonrpc: '2.0'
+                  id: 3
+                  method: tools/call
+                  params:
+                    name: getAccountHistory
+                    arguments:
+                      startDate: '2026-06-01T00:00:00.000Z'
+                      endDate: '2026-07-01T00:00:00.000Z'
+                      limit: 50
+              getUserCards:
+                summary: getUserCards
+                value:
+                  jsonrpc: '2.0'
+                  id: 4
+                  method: tools/call
+                  params:
+                    name: getUserCards
+                    arguments: {}
+              getUserCardTransactions:
+                summary: getUserCardTransactions
+                value:
+                  jsonrpc: '2.0'
+                  id: 5
+                  method: tools/call
+                  params:
+                    name: getUserCardTransactions
+                    arguments:
+                      cardId: 11111111-1111-1111-1111-111111111111
+                      cardIssuerUserId: 22222222-2222-2222-2222-222222222222
+                      pageSize: 20
+                      status: settled
+              getCardRevealPublicKey:
+                summary: getCardRevealPublicKey
+                value:
+                  jsonrpc: '2.0'
+                  id: 6
+                  method: tools/call
+                  params:
+                    name: getCardRevealPublicKey
+                    arguments: {}
+              getUserCards — reveal PAN/CVV:
+                summary: getUserCards (reveal encrypted PAN/CVV)
+                value:
+                  jsonrpc: '2.0'
+                  id: 7
+                  method: tools/call
+                  params:
+                    name: getUserCards
+                    arguments:
+                      cardId: 11111111-1111-1111-1111-111111111111
+                      cardIssuerUserId: 22222222-2222-2222-2222-222222222222
+                      includeCardSecrets: true
+                      sessionId: <RSA-OAEP-wrapped AES key from getCardRevealPublicKey>
+      responses:
+        '200':
+          description: JSON-RPC result. The tool payload is a JSON-encoded string in `result.content[0].text` (decoded and shown below for getAccountBalance).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/McpResult'
+              examples:
+                getAccountBalance:
+                  summary: getAccountBalance
+                  value:
+                    jsonrpc: '2.0'
+                    id: 1
+                    result:
+                      content:
+                      - type: text
+                        text: '{"currency":"USD","totalUsdValue":"1530.42","holdingUsdValue":"1200.00","stakedUsdValue":"300.42","tokenizedAssetsUsdValue":"30.00","tokenizedAssetsPnl":"-4.15","byToken":[{"token":"USDC","network":"polygon","isStake":false,"amount":"1200.00","balanceUsd":"1200.00"},{"token":"CUSDO","network":"ethereum","isStake":true,"amount":"300.00","balanceUsd":"300.42"}],"lastFetchedAt":"2026-07-16T18:20:00.000Z","isStale":false}'
+                getAccountHistory:
+                  summary: getAccountHistory (by hash)
+                  value:
+                    jsonrpc: '2.0'
+                    id: 2
+                    result:
+                      content:
+                      - type: text
+                        text: '{"userId":"550e8400-e29b-41d4-a716-446655440000","filterByHash":"0x9f2c...ab12","count":1,"truncated":false,"hasEurcActivity":false,"transactions":[{"transactionDate":"2026-07-10T14:05:00.000Z","type":"buy","description":"Deposit via credit card","assetReceived":"USDC","amountReceived":"100.00","status":"completed"}]}'
+                getUserCards:
+                  summary: getUserCards
+                  value:
+                    jsonrpc: '2.0'
+                    id: 4
+                    result:
+                      content:
+                      - type: text
+                        text: '{"userId":"550e8400-e29b-41d4-a716-446655440000","cards":[{"id":"card-1","cardIssuerUserId":"ciu-1","nickname":"Main card","lastFourDigits":"4242","status":"active"}],"balances":{"totalUsd":"250.00"}}'
+                getUserCardTransactions:
+                  summary: getUserCardTransactions
+                  value:
+                    jsonrpc: '2.0'
+                    id: 5
+                    result:
+                      content:
+                      - type: text
+                        text: '{"userId":"550e8400-e29b-41d4-a716-446655440000","cardId":"11111111-1111-1111-1111-111111111111","cardIssuerUserId":"22222222-2222-2222-2222-222222222222","transactions":[{"id":"txn-1","amount":42.5,"currency":"USD","merchantName":"Amazon","status":"settled","createdAt":"2026-07-09T19:12:00.000Z"}]}'
+                getCardRevealPublicKey:
+                  summary: getCardRevealPublicKey
+                  value:
+                    jsonrpc: '2.0'
+                    id: 6
+                    result:
+                      content:
+                      - type: text
+                        text: '{"publicKey":"-----BEGIN PUBLIC KEY-----\n...\n-----END PUBLIC KEY-----","algorithm":"RSA-OAEP","hash":"SHA-1","usage":"Generate a random AES-128 key, RSA-OAEP(SHA-1)-wrap it, base64 the result — that string is your sessionId for getUserCards (includeCardSecrets)."}'
+                getUserCards — reveal PAN/CVV:
+                  summary: getUserCards (reveal) — PAN/CVV encrypted
+                  value:
+                    jsonrpc: '2.0'
+                    id: 7
+                    result:
+                      content:
+                      - type: text
+                        text: '{"userId":"550e8400-e29b-41d4-a716-446655440000","cards":[{"id":"11111111-1111-1111-1111-111111111111","cardIssuerUserId":"22222222-2222-2222-2222-222222222222","lastFourDigits":"4242"}],"balances":{"totalUsd":"250.00"},"cardSecrets":{"encryptedPan":"<base64 AES-GCM ciphertext>","encryptedCvc":"<base64 AES-GCM ciphertext>"}}'
+        '400':
+          description: Batch requests are not supported (one message per POST).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonRpcError'
+              example:
+                jsonrpc: '2.0'
+                error:
+                  code: -32600
+                  message: Batch requests are not supported.
+                id: null
+        '401':
+          description: Missing, invalid, or expired API key.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonRpcError'
+              example:
+                jsonrpc: '2.0'
+                error:
+                  code: -32001
+                  message: Unauthorized
+                id: null
+        '403':
+          description: Valid key, but it lacks the required scope (`mcp`, or `mcp_card_reveal` for a reveal), or the request's IP is not in the key's allowlist (`-32004`).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonRpcError'
+              example:
+                jsonrpc: '2.0'
+                error:
+                  code: -32003
+                  message: This API key is not authorized for the MCP (missing the mcp scope).
+                id: null
+        '429':
+          description: Rate limit exceeded (60 requests / 10 seconds per user).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonRpcError'
+              example:
+                jsonrpc: '2.0'
+                error:
+                  code: -32005
+                  message: Rate limit exceeded
+                id: null
+components:
+  schemas:
+    McpResult:
+      type: object
+      properties:
+        jsonrpc:
+          type: string
+          enum:
+          - '2.0'
+        id:
+          type: integer
+        result:
+          type: object
+          properties:
+            content:
+              type: array
+              items:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    enum:
+                    - text
+                  text:
+                    type: string
+                    description: The tool payload, JSON-encoded.
+            isError:
+              type: boolean
+              description: Present and true when the tool returned a handled error (e.g. "No transaction found").
+    JsonRpcError:
+      type: object
+      properties:
+        jsonrpc:
+          type: string
+          enum:
+          - '2.0'
+        id:
+          type:
+          - integer
+          - 'null'
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+              example: -32001
+            message:
+              type: string
+              example: Unauthorized
+    McpCall:
+      type: object
+      required:
+      - jsonrpc
+      - method
+      - params
+      properties:
+        jsonrpc:
+          type: string
+          enum:
+          - '2.0'
+        id:
+          type: integer
+          example: 1
+        method:
+          type: string
+          enum:
+          - tools/call
+        params:
+          type: object
+          required:
+          - name
+          properties:
+            name:
+              type: string
+              enum:
+              - getAccountBalance
+              - getAccountHistory
+              - getUserCards
+              - getUserCardTransactions
+              - getCardRevealPublicKey
+              description: The tool to invoke.
+            arguments:
+              type: object
+              description: Tool arguments (empty for getAccountBalance / getCardRevealPublicKey). getUserCards optionally takes cardId + cardIssuerUserId + includeCardSecrets + sessionId to reveal a card's encrypted PAN/CVV. See the MCP Server guide for each tool's parameters.
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: 'API token issued by your LootRush account manager. Sent as `Authorization: Bearer <token>`.'
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: Integration API key provided by LootRush during Connect registration.

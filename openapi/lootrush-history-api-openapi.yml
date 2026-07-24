@@ -1,0 +1,134 @@
+openapi: 3.1.0
+info:
+  title: LootRush Partner Connect History API
+  description: 'REST endpoints for LootRush partner integrations: crypto withdrawals, transaction history, and OAuth-style user data access.'
+  version: 1.0.0
+servers:
+- url: https://third-party.lootrush.com
+  description: Third-party API (Withdraw, Connect)
+- url: https://history-api.lootrush.com
+  description: History API
+security:
+- bearerAuth: []
+tags:
+- name: History
+paths:
+  /api/history:
+    get:
+      operationId: getUserHistory
+      summary: Get user history
+      description: Retrieves transaction and activity history for the authenticated user. The user is inferred from the API key; no userId is passed. Choose the data set with `resource` + `feature`. Rate limited to 2 requests every 2 seconds per user.
+      tags:
+      - History
+      servers:
+      - url: https://history-api.lootrush.com
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: resource
+        in: query
+        required: true
+        description: Resource type to query.
+        schema:
+          type: string
+          enum:
+          - cards
+          - account
+      - name: feature
+        in: query
+        required: true
+        description: 'Feature to retrieve. For account: account (all activity), account-onramp (deposits), account-offramp (withdrawals), account-swap (converts), account-crypto (crypto transfers / sends), account-portifolio (portfolio activity). For cards: cards-transactions, cards-summary, cards-balance.'
+        schema:
+          type: string
+          enum:
+          - account
+          - account-onramp
+          - account-offramp
+          - account-swap
+          - account-crypto
+          - account-portifolio
+          - cards-transactions
+          - cards-summary
+          - cards-balance
+      - name: currentPage
+        in: query
+        description: Page number (0-indexed).
+        schema:
+          type: integer
+          default: 0
+      - name: pageSize
+        in: query
+        description: Items per page.
+        schema:
+          type: integer
+          default: 10
+          maximum: 100
+      - name: startDate
+        in: query
+        description: Start of the date window (ISO 8601).
+        schema:
+          type: string
+          format: date-time
+      - name: endDate
+        in: query
+        description: End of the date window (ISO 8601).
+        schema:
+          type: string
+          format: date-time
+      - name: filterByText
+        in: query
+        description: Text filter for card transactions (merchant, description).
+        schema:
+          type: string
+      - name: asOf
+        in: query
+        description: Snapshot date (ISO 8601). Used mainly with cards-summary.
+        schema:
+          type: string
+          format: date-time
+      responses:
+        '200':
+          description: History payload. Shape depends on resource + feature (account history nodes, card transactions, card snapshots, or balance movements).
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Invalid resource/feature combination or query params.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          description: Rate limit exceeded (2 requests / 2 seconds per user).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Message describing what went wrong.
+  responses:
+    Unauthorized:
+      description: Invalid or missing API token, or user not allowed.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: 'API token issued by your LootRush account manager. Sent as `Authorization: Bearer <token>`.'
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: Integration API key provided by LootRush during Connect registration.
