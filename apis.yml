@@ -1,21 +1,103 @@
 aid: lootrush
 name: LootRush
-description: 'LootRush is a company surfaced as a portfolio company of paradigm and added to the API Evangelist
-  network as a stub for enrichment. Sector: gaming. This profile is a lead awaiting the enrichment pipeline.'
+description: >-
+  LootRush is a gaming and crypto platform (backed by Paradigm) that publishes a Partner
+  API for marketplace integrations: initiating and tracking on-chain cryptocurrency
+  withdrawals, querying a user's transaction and activity history, and OAuth-style
+  consented access to user data via a Connect API. LootRush also runs a published,
+  read-only Model Context Protocol (MCP) server at mcp.lootrush.com that lets an AI
+  assistant read the key-holder's own balance, cards, card transactions, and account
+  history — every call scoped to the API key's user. Authentication is per-user bearer
+  tokens (Withdraw, History, MCP) and integration API keys (Connect).
 url: https://raw.githubusercontent.com/api-evangelist/lootrush/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
 - paradigm
-x-tier: stub
-x-tier-reason: portfolio-lead
+x-tier: provider
+x-tier-reason: enriched-from-live-api
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-20'
 tags:
 - Company
 - Gaming
-apis: []
+- Crypto
+- Cryptocurrency
+- Payments
+- Withdrawals
+- MCP
+- API
+image: https://www.lootrush.com/favicon.ico
+apis:
+- aid: lootrush:lootrush-connect-api
+  name: LootRush Connect API
+  description: The Connect API from LootRush — 1 operation(s) for connect.
+  humanURL: https://docs.lootrush.com
+  baseURL: https://third-party.lootrush.com
+  tags:
+  - Connect
+  properties:
+  - type: OpenAPI
+    url: openapi/lootrush-connect-api-openapi.yml
+  - type: Documentation
+    url: https://docs.lootrush.com
+  - type: APIReference
+    url: https://docs.lootrush.com/api-reference/openapi.json
+- aid: lootrush:lootrush-history-api
+  name: LootRush History API
+  description: The History API from LootRush — 1 operation(s) for history.
+  humanURL: https://docs.lootrush.com
+  baseURL: https://third-party.lootrush.com
+  tags:
+  - History
+  properties:
+  - type: OpenAPI
+    url: openapi/lootrush-history-api-openapi.yml
+  - type: Documentation
+    url: https://docs.lootrush.com
+  - type: APIReference
+    url: https://docs.lootrush.com/api-reference/openapi.json
+- aid: lootrush:lootrush-mcp-api
+  name: LootRush MCP API
+  description: The MCP API from LootRush — 1 operation(s) for mcp.
+  humanURL: https://docs.lootrush.com
+  baseURL: https://third-party.lootrush.com
+  tags:
+  - MCP
+  properties:
+  - type: OpenAPI
+    url: openapi/lootrush-mcp-api-openapi.yml
+  - type: Documentation
+    url: https://docs.lootrush.com
+  - type: APIReference
+    url: https://docs.lootrush.com/api-reference/openapi.json
+- aid: lootrush:lootrush-withdrawals-api
+  name: LootRush Withdrawals API
+  description: The Withdrawals API from LootRush — 2 operation(s) for withdrawals.
+  humanURL: https://docs.lootrush.com
+  baseURL: https://third-party.lootrush.com
+  tags:
+  - Withdrawals
+  properties:
+  - type: OpenAPI
+    url: openapi/lootrush-withdrawals-api-openapi.yml
+  - type: Documentation
+    url: https://docs.lootrush.com
+  - type: APIReference
+    url: https://docs.lootrush.com/api-reference/openapi.json
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -24,3 +106,42 @@ maintainers:
 common:
 - type: Website
   url: https://www.lootrush.com
+- type: Documentation
+  url: https://docs.lootrush.com
+- type: APIReference
+  url: https://docs.lootrush.com/api-reference/openapi.json
+- type: GettingStarted
+  url: https://docs.lootrush.com/index.md
+- type: Support
+  url: mailto:support@lootrush.com
+- type: LLMsTxt
+  url: llms/lootrush-llms.txt
+- type: MCPServer
+  url: mcp/lootrush-mcp.yml
+- type: Authentication
+  url: authentication/lootrush-authentication.yml
+- type: AgenticAccess
+  url: agentic-access/lootrush-agentic-access.yml
+- type: Conventions
+  url: conventions/lootrush-conventions.yml
+- type: ErrorCatalog
+  url: errors/lootrush-problem-types.yml
+- type: RateLimits
+  url: rate-limits/lootrush-rate-limits.yml
+- type: Lifecycle
+  url: lifecycle/lootrush-lifecycle.yml
+- type: Conformance
+  url: conformance/lootrush-conformance.yml
+- type: DataModel
+  url: data-model/lootrush-data-model.yml
+- type: DomainSecurity
+  url: security/lootrush-domain-security.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Overlay
+  url: overlays/lootrush-openapi-overlay.yaml
+x-enrichment:
+  date: '2026-07-20'
+  status: enriched
+  artifacts_added: 13
+  pass: local-v1
