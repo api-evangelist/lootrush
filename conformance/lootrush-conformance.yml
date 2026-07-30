@@ -1,0 +1,27 @@
+generated: '2026-07-20'
+method: derived
+source: openapi/lootrush-openapi-original.json
+standards:
+  - id: openapi-3.1
+    conforms: true
+    evidence: spec is OpenAPI 3.1.0
+  - id: jsonrpc-2.0
+    conforms: true
+    evidence: MCP endpoint (/mcp) is a JSON-RPC 2.0 method dispatcher (tools/call)
+  - id: mcp
+    conforms: true
+    evidence: published Model Context Protocol server at https://mcp.lootrush.com/mcp (Streamable HTTP transport)
+  - id: oauth2
+    conforms: false
+    evidence: bearer token + api key only; no oauth2 securityScheme
+  - id: oidc
+    conforms: false
+  - id: rfc9457-problem-details
+    conforms: false
+    evidence: 'errors use a plain { error: string } envelope, not application/problem+json'
+  - id: pagination
+    conforms: true
+    evidence: page-number pagination on withdrawals (page/perPage) and history (currentPage/pageSize)
+  - id: idempotency
+    conforms: false
+    evidence: no idempotency-key contract documented

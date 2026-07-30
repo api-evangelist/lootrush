@@ -1,0 +1,1185 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "LootRush Partner API",
+    "description": "REST endpoints for LootRush partner integrations: crypto withdrawals, transaction history, and OAuth-style user data access.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://third-party.lootrush.com",
+      "description": "Third-party API (Withdraw, Connect)"
+    },
+    {
+      "url": "https://history-api.lootrush.com",
+      "description": "History API"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/mcp": {
+      "post": {
+        "operationId": "callMcpTool",
+        "summary": "Call an MCP tool",
+        "description": "JSON-RPC 2.0 endpoint for the MCP server. Set `method` to `tools/call` and `params.name` to one of `getAccountBalance`, `getAccountHistory`, `getUserCards`, `getUserCardTransactions`, `getCardRevealPublicKey`. Pick a tool from the request examples below. The tool's payload comes back as a JSON-encoded string in `result.content[0].text`. Every call is scoped to the API key's user — no tool takes an identity argument. Batch (array) bodies are rejected. `getUserCards` with `includeCardSecrets` reveals a card's PAN/CVV **encrypted** (the server never decrypts) and needs a `sessionId` built from `getCardRevealPublicKey`.",
+        "tags": [
+          "MCP"
+        ],
+        "servers": [
+          {
+            "url": "https://mcp.lootrush.com"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/McpCall"
+              },
+              "examples": {
+                "getAccountBalance": {
+                  "summary": "getAccountBalance",
+                  "value": {
+                    "jsonrpc": "2.0",
+                    "id": 1,
+                    "method": "tools/call",
+                    "params": {
+                      "name": "getAccountBalance",
+                      "arguments": {}
+                    }
+                  }
+                },
+                "getAccountHistory — by hash": {
+                  "summary": "getAccountHistory (single transaction by hash)",
+                  "value": {
+                    "jsonrpc": "2.0",
+                    "id": 2,
+                    "method": "tools/call",
+                    "params": {
+                      "name": "getAccountHistory",
+                      "arguments": {
+                        "filterByHash": "0x9f2c...ab12"
+                      }
+                    }
+                  }
+                },
+                "getAccountHistory — window": {
+                  "summary": "getAccountHistory (date window)",
+                  "value": {
+                    "jsonrpc": "2.0",
+                    "id": 3,
+                    "method": "tools/call",
+                    "params": {
+                      "name": "getAccountHistory",
+                      "arguments": {
+                        "startDate": "2026-06-01T00:00:00.000Z",
+                        "endDate": "2026-07-01T00:00:00.000Z",
+                        "limit": 50
+                      }
+                    }
+                  }
+                },
+                "getUserCards": {
+                  "summary": "getUserCards",
+                  "value": {
+                    "jsonrpc": "2.0",
+                    "id": 4,
+                    "method": "tools/call",
+                    "params": {
+                      "name": "getUserCards",
+                      "arguments": {}
+                    }
+                  }
+                },
+                "getUserCardTransactions": {
+                  "summary": "getUserCardTransactions",
+                  "value": {
+                    "jsonrpc": "2.0",
+                    "id": 5,
+                    "method": "tools/call",
+                    "params": {
+                      "name": "getUserCardTransactions",
+                      "arguments": {
+                        "cardId": "11111111-1111-1111-1111-111111111111",
+                        "cardIssuerUserId": "22222222-2222-2222-2222-222222222222",
+                        "pageSize": 20,
+                        "status": "settled"
+                      }
+                    }
+                  }
+                },
+                "getCardRevealPublicKey": {
+                  "summary": "getCardRevealPublicKey",
+                  "value": {
+                    "jsonrpc": "2.0",
+                    "id": 6,
+                    "method": "tools/call",
+                    "params": {
+                      "name": "getCardRevealPublicKey",
+                      "arguments": {}
+                    }
+                  }
+                },
+                "getUserCards — reveal PAN/CVV": {
+                  "summary": "getUserCards (reveal encrypted PAN/CVV)",
+                  "value": {
+                    "jsonrpc": "2.0",
+                    "id": 7,
+                    "method": "tools/call",
+                    "params": {
+                      "name": "getUserCards",
+                      "arguments": {
+                        "cardId": "11111111-1111-1111-1111-111111111111",
+                        "cardIssuerUserId": "22222222-2222-2222-2222-222222222222",
+                        "includeCardSecrets": true,
+                        "sessionId": "<RSA-OAEP-wrapped AES key from getCardRevealPublicKey>"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "JSON-RPC result. The tool payload is a JSON-encoded string in `result.content[0].text` (decoded and shown below for getAccountBalance).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/McpResult"
+                },
+                "examples": {
+                  "getAccountBalance": {
+                    "summary": "getAccountBalance",
+                    "value": {
+                      "jsonrpc": "2.0",
+                      "id": 1,
+                      "result": {
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "{\"currency\":\"USD\",\"totalUsdValue\":\"1530.42\",\"holdingUsdValue\":\"1200.00\",\"stakedUsdValue\":\"300.42\",\"tokenizedAssetsUsdValue\":\"30.00\",\"tokenizedAssetsPnl\":\"-4.15\",\"byToken\":[{\"token\":\"USDC\",\"network\":\"polygon\",\"isStake\":false,\"amount\":\"1200.00\",\"balanceUsd\":\"1200.00\"},{\"token\":\"CUSDO\",\"network\":\"ethereum\",\"isStake\":true,\"amount\":\"300.00\",\"balanceUsd\":\"300.42\"}],\"lastFetchedAt\":\"2026-07-16T18:20:00.000Z\",\"isStale\":false}"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "getAccountHistory": {
+                    "summary": "getAccountHistory (by hash)",
+                    "value": {
+                      "jsonrpc": "2.0",
+                      "id": 2,
+                      "result": {
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "{\"userId\":\"550e8400-e29b-41d4-a716-446655440000\",\"filterByHash\":\"0x9f2c...ab12\",\"count\":1,\"truncated\":false,\"hasEurcActivity\":false,\"transactions\":[{\"transactionDate\":\"2026-07-10T14:05:00.000Z\",\"type\":\"buy\",\"description\":\"Deposit via credit card\",\"assetReceived\":\"USDC\",\"amountReceived\":\"100.00\",\"status\":\"completed\"}]}"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "getUserCards": {
+                    "summary": "getUserCards",
+                    "value": {
+                      "jsonrpc": "2.0",
+                      "id": 4,
+                      "result": {
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "{\"userId\":\"550e8400-e29b-41d4-a716-446655440000\",\"cards\":[{\"id\":\"card-1\",\"cardIssuerUserId\":\"ciu-1\",\"nickname\":\"Main card\",\"lastFourDigits\":\"4242\",\"status\":\"active\"}],\"balances\":{\"totalUsd\":\"250.00\"}}"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "getUserCardTransactions": {
+                    "summary": "getUserCardTransactions",
+                    "value": {
+                      "jsonrpc": "2.0",
+                      "id": 5,
+                      "result": {
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "{\"userId\":\"550e8400-e29b-41d4-a716-446655440000\",\"cardId\":\"11111111-1111-1111-1111-111111111111\",\"cardIssuerUserId\":\"22222222-2222-2222-2222-222222222222\",\"transactions\":[{\"id\":\"txn-1\",\"amount\":42.5,\"currency\":\"USD\",\"merchantName\":\"Amazon\",\"status\":\"settled\",\"createdAt\":\"2026-07-09T19:12:00.000Z\"}]}"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "getCardRevealPublicKey": {
+                    "summary": "getCardRevealPublicKey",
+                    "value": {
+                      "jsonrpc": "2.0",
+                      "id": 6,
+                      "result": {
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "{\"publicKey\":\"-----BEGIN PUBLIC KEY-----\\n...\\n-----END PUBLIC KEY-----\",\"algorithm\":\"RSA-OAEP\",\"hash\":\"SHA-1\",\"usage\":\"Generate a random AES-128 key, RSA-OAEP(SHA-1)-wrap it, base64 the result — that string is your sessionId for getUserCards (includeCardSecrets).\"}"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "getUserCards — reveal PAN/CVV": {
+                    "summary": "getUserCards (reveal) — PAN/CVV encrypted",
+                    "value": {
+                      "jsonrpc": "2.0",
+                      "id": 7,
+                      "result": {
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "{\"userId\":\"550e8400-e29b-41d4-a716-446655440000\",\"cards\":[{\"id\":\"11111111-1111-1111-1111-111111111111\",\"cardIssuerUserId\":\"22222222-2222-2222-2222-222222222222\",\"lastFourDigits\":\"4242\"}],\"balances\":{\"totalUsd\":\"250.00\"},\"cardSecrets\":{\"encryptedPan\":\"<base64 AES-GCM ciphertext>\",\"encryptedCvc\":\"<base64 AES-GCM ciphertext>\"}}"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Batch requests are not supported (one message per POST).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonRpcError"
+                },
+                "example": {
+                  "jsonrpc": "2.0",
+                  "error": {
+                    "code": -32600,
+                    "message": "Batch requests are not supported."
+                  },
+                  "id": null
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, invalid, or expired API key.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonRpcError"
+                },
+                "example": {
+                  "jsonrpc": "2.0",
+                  "error": {
+                    "code": -32001,
+                    "message": "Unauthorized"
+                  },
+                  "id": null
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Valid key, but it lacks the required scope (`mcp`, or `mcp_card_reveal` for a reveal), or the request's IP is not in the key's allowlist (`-32004`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonRpcError"
+                },
+                "example": {
+                  "jsonrpc": "2.0",
+                  "error": {
+                    "code": -32003,
+                    "message": "This API key is not authorized for the MCP (missing the mcp scope)."
+                  },
+                  "id": null
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded (60 requests / 10 seconds per user).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonRpcError"
+                },
+                "example": {
+                  "jsonrpc": "2.0",
+                  "error": {
+                    "code": -32005,
+                    "message": "Rate limit exceeded"
+                  },
+                  "id": null
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/crypto/{userId}/withdraw": {
+      "post": {
+        "operationId": "createWithdrawal",
+        "summary": "Create withdrawal",
+        "description": "Initiates a cryptocurrency withdrawal for a user. The withdrawal is created as a queued transaction and processed asynchronously.",
+        "tags": [
+          "Withdrawals"
+        ],
+        "servers": [
+          {
+            "url": "https://third-party.lootrush.com"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the user making the withdrawal.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "amount",
+                  "to"
+                ],
+                "properties": {
+                  "amount": {
+                    "type": "string",
+                    "description": "Amount to withdraw. Sent as a string to preserve decimal precision.",
+                    "example": "100.50"
+                  },
+                  "currency": {
+                    "type": "string",
+                    "description": "Cryptocurrency to withdraw.",
+                    "default": "USDT",
+                    "examples": [
+                      "USDT",
+                      "USDC",
+                      "EURC"
+                    ]
+                  },
+                  "network": {
+                    "type": "string",
+                    "description": "Blockchain network.",
+                    "default": "polygon",
+                    "examples": [
+                      "polygon",
+                      "ethereum",
+                      "base"
+                    ]
+                  },
+                  "to": {
+                    "type": "string",
+                    "description": "Recipient identifier: an email address, a user ID (UUID), or a wallet address (0x-prefixed, 42 chars). Emails and user IDs resolve to the user's verified smart wallet; a wallet address is used as-is.",
+                    "example": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb2"
+                  },
+                  "externalId": {
+                    "type": "string",
+                    "description": "Optional external identifier for tracking this withdrawal in your system.",
+                    "example": "withdraw-12345"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Withdrawal queued.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Withdraw created as queued"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "bulkId": {
+                          "type": "string",
+                          "format": "uuid",
+                          "description": "Identifier for the bulk payment operation."
+                        },
+                        "externalId": {
+                          "type": "string",
+                          "description": "The external identifier you provided, if any."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "description": "The recipient wallet is blocked from receiving tokens.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found, recipient could not be resolved, or wallet not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/crypto/{userId}/withdraws": {
+      "get": {
+        "operationId": "listWithdrawals",
+        "summary": "List withdrawals",
+        "description": "Retrieves a paginated list of withdrawal transactions for a user, with optional filters.",
+        "tags": [
+          "Withdrawals"
+        ],
+        "servers": [
+          {
+            "url": "https://third-party.lootrush.com"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "description": "Unique identifier of the user whose withdrawals to retrieve.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number (1-indexed).",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "perPage",
+            "in": "query",
+            "description": "Results per page.",
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "maximum": 200
+            }
+          },
+          {
+            "name": "bulkId",
+            "in": "query",
+            "description": "Filter by bulk payment ID.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "transactionHash",
+            "in": "query",
+            "description": "Filter by blockchain transaction hash.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filter by withdrawal status.",
+            "schema": {
+              "type": "string",
+              "examples": [
+                "queued",
+                "pending",
+                "processing",
+                "completed",
+                "failed"
+              ]
+            }
+          },
+          {
+            "name": "externalId",
+            "in": "query",
+            "description": "Filter by the external identifier you provided.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A page of withdrawals.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "withdraws": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Withdrawal"
+                          }
+                        },
+                        "pageInfo": {
+                          "type": "object",
+                          "properties": {
+                            "limit": {
+                              "type": "integer"
+                            },
+                            "offset": {
+                              "type": "integer"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "description": "User not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/history": {
+      "get": {
+        "operationId": "getUserHistory",
+        "summary": "Get user history",
+        "description": "Retrieves transaction and activity history for the authenticated user. The user is inferred from the API key; no userId is passed. Choose the data set with `resource` + `feature`. Rate limited to 2 requests every 2 seconds per user.",
+        "tags": [
+          "History"
+        ],
+        "servers": [
+          {
+            "url": "https://history-api.lootrush.com"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "resource",
+            "in": "query",
+            "required": true,
+            "description": "Resource type to query.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "cards",
+                "account"
+              ]
+            }
+          },
+          {
+            "name": "feature",
+            "in": "query",
+            "required": true,
+            "description": "Feature to retrieve. For account: account (all activity), account-onramp (deposits), account-offramp (withdrawals), account-swap (converts), account-crypto (crypto transfers / sends), account-portifolio (portfolio activity). For cards: cards-transactions, cards-summary, cards-balance.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "account",
+                "account-onramp",
+                "account-offramp",
+                "account-swap",
+                "account-crypto",
+                "account-portifolio",
+                "cards-transactions",
+                "cards-summary",
+                "cards-balance"
+              ]
+            }
+          },
+          {
+            "name": "currentPage",
+            "in": "query",
+            "description": "Page number (0-indexed).",
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "Items per page.",
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "maximum": 100
+            }
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "description": "Start of the date window (ISO 8601).",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "description": "End of the date window (ISO 8601).",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "filterByText",
+            "in": "query",
+            "description": "Text filter for card transactions (merchant, description).",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "asOf",
+            "in": "query",
+            "description": "Snapshot date (ISO 8601). Used mainly with cards-summary.",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "History payload. Shape depends on resource + feature (account history nodes, card transactions, card snapshots, or balance movements).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid resource/feature combination or query params.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "429": {
+            "description": "Rate limit exceeded (2 requests / 2 seconds per user).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/consent/{consentId}/user": {
+      "get": {
+        "operationId": "getConsentUser",
+        "summary": "Get consented user data",
+        "description": "Retrieves user data for a granted consent. Authenticated with an integration API key via the x-api-key header, not a bearer token.",
+        "tags": [
+          "Connect"
+        ],
+        "servers": [
+          {
+            "url": "https://third-party.lootrush.com"
+          }
+        ],
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "consentId",
+            "in": "path",
+            "required": true,
+            "description": "Consent ID received after the user granted access.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Consented user data.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "consent_id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "integration_id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "granted_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "scopes": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "enum": [
+                          "profile",
+                          "email",
+                          "wallet",
+                          "kyc"
+                        ]
+                      }
+                    },
+                    "user": {
+                      "type": "object",
+                      "properties": {
+                        "profile": {
+                          "type": "object",
+                          "properties": {
+                            "name": {
+                              "type": "string"
+                            },
+                            "given_name": {
+                              "type": "string"
+                            },
+                            "family_name": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "email": {
+                          "type": "object",
+                          "properties": {
+                            "address": {
+                              "type": "string",
+                              "format": "email"
+                            },
+                            "verified": {
+                              "type": "boolean"
+                            }
+                          }
+                        },
+                        "wallet": {
+                          "type": "object",
+                          "properties": {
+                            "addresses": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "chain": {
+                                    "type": "string",
+                                    "enum": [
+                                      "base",
+                                      "polygon"
+                                    ]
+                                  },
+                                  "address": {
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            },
+                            "is_business": {
+                              "type": "boolean"
+                            }
+                          }
+                        },
+                        "kyc": {
+                          "type": "object",
+                          "properties": {
+                            "email": {
+                              "type": "string"
+                            },
+                            "entity_type": {
+                              "type": "string",
+                              "enum": [
+                                "individual",
+                                "business"
+                              ]
+                            },
+                            "first_name": {
+                              "type": "string"
+                            },
+                            "last_name": {
+                              "type": "string"
+                            },
+                            "legal_name": {
+                              "type": "string",
+                              "nullable": true
+                            },
+                            "document_type": {
+                              "type": "string"
+                            },
+                            "document_number": {
+                              "type": "string"
+                            },
+                            "tax_id": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid or missing API key.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The consent belongs to a different integration.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Consent not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Consent has been revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Gone: Consent has been revoked"
+                    },
+                    "revoked_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "API token issued by your LootRush account manager. Sent as `Authorization: Bearer <token>`."
+      },
+      "apiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-api-key",
+        "description": "Integration API key provided by LootRush during Connect registration."
+      }
+    },
+    "responses": {
+      "Unauthorized": {
+        "description": "Invalid or missing API token, or user not allowed.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "McpCall": {
+        "type": "object",
+        "required": [
+          "jsonrpc",
+          "method",
+          "params"
+        ],
+        "properties": {
+          "jsonrpc": {
+            "type": "string",
+            "enum": [
+              "2.0"
+            ]
+          },
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "method": {
+            "type": "string",
+            "enum": [
+              "tools/call"
+            ]
+          },
+          "params": {
+            "type": "object",
+            "required": [
+              "name"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "enum": [
+                  "getAccountBalance",
+                  "getAccountHistory",
+                  "getUserCards",
+                  "getUserCardTransactions",
+                  "getCardRevealPublicKey"
+                ],
+                "description": "The tool to invoke."
+              },
+              "arguments": {
+                "type": "object",
+                "description": "Tool arguments (empty for getAccountBalance / getCardRevealPublicKey). getUserCards optionally takes cardId + cardIssuerUserId + includeCardSecrets + sessionId to reveal a card's encrypted PAN/CVV. See the MCP Server guide for each tool's parameters."
+              }
+            }
+          }
+        }
+      },
+      "McpResult": {
+        "type": "object",
+        "properties": {
+          "jsonrpc": {
+            "type": "string",
+            "enum": [
+              "2.0"
+            ]
+          },
+          "id": {
+            "type": "integer"
+          },
+          "result": {
+            "type": "object",
+            "properties": {
+              "content": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "text"
+                      ]
+                    },
+                    "text": {
+                      "type": "string",
+                      "description": "The tool payload, JSON-encoded."
+                    }
+                  }
+                }
+              },
+              "isError": {
+                "type": "boolean",
+                "description": "Present and true when the tool returned a handled error (e.g. \"No transaction found\")."
+              }
+            }
+          }
+        }
+      },
+      "JsonRpcError": {
+        "type": "object",
+        "properties": {
+          "jsonrpc": {
+            "type": "string",
+            "enum": [
+              "2.0"
+            ]
+          },
+          "id": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "integer",
+                "example": -32001
+              },
+              "message": {
+                "type": "string",
+                "example": "Unauthorized"
+              }
+            }
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "Message describing what went wrong."
+          }
+        }
+      },
+      "Withdrawal": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Entry ID."
+          },
+          "bulkId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Bulk payment ID."
+          },
+          "status": {
+            "type": "string",
+            "description": "Current status of the withdrawal entry."
+          },
+          "amountToPayToken": {
+            "type": "string",
+            "description": "Amount to be paid (string for precision)."
+          },
+          "outCurrencyIsoCode": {
+            "type": "string",
+            "description": "Currency code (e.g. USDT)."
+          },
+          "toAddress": {
+            "type": "string",
+            "description": "Recipient wallet address."
+          },
+          "externalId": {
+            "type": "string",
+            "description": "External identifier, if provided.",
+            "nullable": true
+          },
+          "transactionHash": {
+            "type": "string",
+            "description": "Blockchain transaction hash once processed.",
+            "nullable": true
+          },
+          "transferTokenStatus": {
+            "type": "string",
+            "description": "On-chain transfer status.",
+            "nullable": true
+          },
+          "errorMessage": {
+            "type": "string",
+            "description": "Error message if the withdrawal failed.",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    }
+  }
+}

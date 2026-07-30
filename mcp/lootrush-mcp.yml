@@ -1,0 +1,34 @@
+generated: '2026-07-20'
+method: searched
+status: published
+source: https://docs.lootrush.com/mcp-server.md
+server:
+  name: lootrush
+  transport: http
+  description: Streamable HTTP (JSON-RPC 2.0), stateless — one request, one response. POST only.
+  url: https://mcp.lootrush.com/mcp
+  auth: 'LootRush per-user API key sent as `Authorization: Bearer <token>` (also accepted as `?token=` query param)'
+  access: read-only, scoped to the key's user
+  rate_limit: 60 requests / 10 seconds per user
+  install:
+    claude_code: 'claude mcp add --transport http lootrush https://mcp.lootrush.com/mcp --header "Authorization: Bearer YOUR_API_KEY"'
+tools:
+  - name: getAccountBalance
+    description: Read the user's account balance.
+    source_operation: openapi/lootrush-openapi-original.json#callMcpTool
+  - name: getAccountHistory
+    description: Read the user's account activity history.
+    source_operation: openapi/lootrush-openapi-original.json#callMcpTool
+  - name: getUserCards
+    description: List the user's cards. With `includeCardSecrets` reveals PAN/CVV encrypted (requires `mcp_card_reveal` scope + a sessionId from getCardRevealPublicKey).
+    source_operation: openapi/lootrush-openapi-original.json#callMcpTool
+  - name: getUserCardTransactions
+    description: List transactions for the user's cards.
+    source_operation: openapi/lootrush-openapi-original.json#callMcpTool
+  - name: getCardRevealPublicKey
+    description: Return the public key used to build a sessionId for encrypted card-secret reveal.
+    source_operation: openapi/lootrush-openapi-original.json#callMcpTool
+notes: >
+  Every tool is read-only and scoped to the API key's user — no tool takes an identity argument.
+  Batch (array) JSON-RPC bodies are rejected. Card-secret reveal returns encrypted PAN/CVV; the
+  server never decrypts. Scopes are enforced on the API key (`mcp`, and `mcp_card_reveal` for reveals).

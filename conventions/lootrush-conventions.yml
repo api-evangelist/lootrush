@@ -1,0 +1,33 @@
+generated: '2026-07-20'
+method: searched
+source: https://docs.lootrush.com/llms.txt
+authentication:
+  styles:
+    - bearer token (Withdraw, History, MCP) — `Authorization: Bearer <token>`, per-user API key
+    - api key header (Connect) — `x-api-key: <key>`, integration-level key
+  cross_ref: authentication/lootrush-authentication.yml
+idempotency:
+  supported: false
+  notes: No idempotency-key header or parameter documented. Withdrawals are created as queued transactions processed asynchronously; a client-supplied `externalId` can be used to correlate/deduplicate on your side but is not documented as an idempotency key.
+pagination:
+  styles:
+    - name: withdrawals
+      style: page-number (1-indexed)
+      params: [page, perPage]
+    - name: history
+      style: page-number (0-indexed)
+      params: [currentPage, pageSize]
+  note: Two different pagination conventions across services — page is 1-indexed for withdrawals, 0-indexed for history.
+identity_scoping:
+  note: The authenticated user is inferred from the API key. History and all MCP tools take no userId argument; withdrawal endpoints carry the userId in the path.
+error_envelope:
+  rest: '{ "error": "<message>" }'
+  mcp: JSON-RPC 2.0 error object (numeric code, e.g. -32004)
+  cross_ref: errors/lootrush-problem-types.yml
+rate_limit_signaling:
+  documented: per-endpoint in docs (MCP 60/10s, History 2/2s per user)
+  headers: none documented
+  cross_ref: rate-limits/lootrush-rate-limits.yml
+versioning:
+  scheme: mixed uri-path — Connect uses `/api/v1/...`; Withdraw/History are unversioned paths
+  cross_ref: lifecycle/lootrush-lifecycle.yml

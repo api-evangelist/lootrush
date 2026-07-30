@@ -1,0 +1,22 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for LootRush Partner API
+  version: 1.0.0
+extends: openapi/lootrush-openapi-original.json
+actions:
+  - target: $.info
+    update:
+      x-apievangelist-enriched: '2026-07-20'
+      x-apievangelist-categories:
+        - crypto
+        - payments
+        - gaming
+        - mcp
+      x-apievangelist-mcp-server: https://mcp.lootrush.com/mcp
+  - target: $.paths['/mcp']['post']
+    update:
+      x-apievangelist-note: Published MCP server (read-only, per-user scoped). See mcp/lootrush-mcp.yml.
+  - target: $.paths['/api/crypto/{userId}/withdraw']['post']
+    update:
+      x-apievangelist-consequence: physical
+      x-apievangelist-note: Initiates an on-chain crypto transfer; treat as a value-moving operation.

@@ -1,0 +1,35 @@
+generated: '2026-07-20'
+method: derived
+source: openapi/lootrush-openapi-original.json
+entities:
+  - name: User
+    id_field: userId
+    notes: Not a returned schema; referenced as a path parameter and inferred from the API key. Root identity all data is scoped to.
+  - name: Withdrawal
+    id_field: id
+    fields: [id, bulkId, status, amountToPayToken, outCurrencyIsoCode, toAddress, externalId, transactionHash, transferTokenStatus, errorMessage, createdAt, updatedAt]
+    notes: Crypto withdrawal entry; created queued and processed asynchronously.
+  - name: Consent
+    id_field: consentId
+    notes: OAuth-style consent granting an integration access to a user's data (Connect API); can be revoked (HTTP 410).
+  - name: Card
+    id_field: null
+    notes: Exposed only via MCP tools (getUserCards / getUserCardTransactions / getCardRevealPublicKey); no REST schema in the spec.
+relationships:
+  - from: Withdrawal
+    to: User
+    type: belongs_to
+    via: userId
+  - from: Withdrawal
+    to: Withdrawal
+    type: belongs_to
+    via: bulkId
+    notes: Withdrawals may be grouped under a bulk payment (bulkId).
+  - from: Consent
+    to: User
+    type: belongs_to
+    via: consentId
+  - from: Card
+    to: User
+    type: belongs_to
+    via: api-key user

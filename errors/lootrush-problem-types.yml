@@ -1,0 +1,48 @@
+generated: '2026-07-20'
+method: derived
+source: openapi/lootrush-openapi-original.json
+format: custom
+envelope:
+  rest: '{ "error": "<message>" }'
+  mcp: JSON-RPC 2.0 error object with numeric code (e.g. -32004 for IP not in allowlist)
+problems:
+  - status: 400
+    title: Bad request
+    detail: Invalid resource/feature combination or query params; or (MCP) batch requests not supported (one message per POST).
+    source_operations:
+      - getUserHistory
+      - callMcpTool
+  - status: 401
+    title: Unauthorized
+    detail: Missing, invalid, or expired API key / bearer token.
+    source_operations:
+      - callMcpTool
+      - createWithdrawal
+      - listWithdrawals
+      - getUserHistory
+      - getConsentUser
+  - status: 403
+    title: Forbidden
+    detail: Key lacks required scope (`mcp` / `mcp_card_reveal`) or IP not in the allowlist (MCP `-32004`); recipient wallet blocked (withdrawals); or consent belongs to a different integration (Connect).
+    source_operations:
+      - callMcpTool
+      - createWithdrawal
+      - getConsentUser
+  - status: 404
+    title: Not found
+    detail: User not found, recipient could not be resolved, wallet not found, or consent not found.
+    source_operations:
+      - createWithdrawal
+      - listWithdrawals
+      - getConsentUser
+  - status: 410
+    title: Gone
+    detail: Consent has been revoked.
+    source_operations:
+      - getConsentUser
+  - status: 429
+    title: Too many requests
+    detail: Rate limit exceeded (MCP 60/10s per user; History 2/2s per user).
+    source_operations:
+      - callMcpTool
+      - getUserHistory

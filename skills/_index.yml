@@ -1,0 +1,12 @@
+generated: '2026-07-20'
+method: generated
+source: openapi/lootrush-openapi-original.json
+skills:
+  - file: lootrush-create-withdrawal.md
+    name: Create and track a LootRush crypto withdrawal
+    api: openapi/lootrush-openapi-original.json
+    operations: [createWithdrawal, listWithdrawals]
+  - file: lootrush-read-account-via-mcp.md
+    name: Read a LootRush account over MCP
+    api: openapi/lootrush-openapi-original.json
+    operations: [callMcpTool]

@@ -1,0 +1,16 @@
+generated: '2026-07-20'
+method: derived
+source: openapi/lootrush-openapi-original.json
+versioning:
+  scheme: mixed uri-path
+  current: v1 (Connect); Withdraw and History paths are unversioned
+  spec_version: '1.0.0'
+  docs: https://docs.lootrush.com
+deprecation:
+  policy_url: null
+  sunset_header: false
+sla:
+  url: null
+status_page: null
+deprecated_operations: []
+notes: No dedicated status page, deprecation policy, or published SLA found on the docs surface as of this pass.

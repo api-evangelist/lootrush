@@ -1,0 +1,18 @@
+# LootRush Documentation
+
+## Docs
+
+- [Get consented user data](https://docs.lootrush.com/api-reference/connect/get-consented-user-data.md): Retrieves user data for a granted consent. Authenticated with an integration API key via the x-api-key header, not a bearer token.
+- [Get user history](https://docs.lootrush.com/api-reference/history/get-user-history.md): Retrieves transaction and activity history for the authenticated user. The user is inferred from the API key; no userId is passed. Choose the data set with `resource` + `feature`. Rate limited to 2 requests every 2 seconds per user.
+- [Call an MCP tool](https://docs.lootrush.com/api-reference/mcp/call-an-mcp-tool.md): JSON-RPC 2.0 endpoint for the MCP server. Set `method` to `tools/call` and `params.name` to one of `getAccountBalance`, `getAccountHistory`, `getUserCards`, `getUserCardTransactions`, `getCardRevealPublicKey`. Pick a tool from the request examples below. The tool's payload comes back as a JSON-encod…
+- [Create withdrawal](https://docs.lootrush.com/api-reference/withdrawals/create-withdrawal.md): Initiates a cryptocurrency withdrawal for a user. The withdrawal is created as a queued transaction and processed asynchronously.
+- [List withdrawals](https://docs.lootrush.com/api-reference/withdrawals/list-withdrawals.md): Retrieves a paginated list of withdrawal transactions for a user, with optional filters.
+- [Connect API](https://docs.lootrush.com/api/connect.md): OAuth-style API for accessing user data with consent
+- [History API](https://docs.lootrush.com/api/history.md): API endpoints for querying user transaction and activity history
+- [Withdraw API](https://docs.lootrush.com/api/withdraw.md): API endpoints for creating and managing cryptocurrency withdrawals
+- [Develop with LootRush](https://docs.lootrush.com/index.md): Integrate withdrawals, transaction history, and user data into your marketplace
+- [MCP Server](https://docs.lootrush.com/mcp-server.md): Give your AI assistant read-only access to your own LootRush account
+
+## OpenAPI Specs
+
+- [openapi](https://docs.lootrush.com/api-reference/openapi.json)

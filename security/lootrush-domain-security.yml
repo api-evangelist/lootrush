@@ -1,0 +1,16 @@
+generated: '2026-07-20'
+method: probed
+source: live DNS/TLS/HTTP probes of apis.yml + OpenAPI hosts
+hosts:
+- host: www.lootrush.com
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Aug 31 15:09:44 2026 GMT
+  hsts: null
+domains:
+- domain: lootrush.com
+  dnssec: false
+  caa: []
+  spf: false
+  dmarc: true
+  dmarc_policy: none

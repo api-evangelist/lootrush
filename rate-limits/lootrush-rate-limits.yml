@@ -1,0 +1,17 @@
+generated: '2026-07-20'
+method: searched
+source: https://docs.lootrush.com/llms.txt
+signaling: documented per-endpoint (no rate-limit response headers documented)
+rate_limits:
+  - scope: per user
+    operation: callMcpTool
+    endpoint: POST https://mcp.lootrush.com/mcp
+    limit_count: 60
+    window: 10 seconds
+    on_exceeded: HTTP 429
+  - scope: per user
+    operation: getUserHistory
+    endpoint: GET https://history-api.lootrush.com/api/history
+    limit_count: 2
+    window: 2 seconds
+    on_exceeded: HTTP 429
