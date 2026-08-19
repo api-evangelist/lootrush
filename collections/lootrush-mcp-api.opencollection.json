@@ -1,0 +1,43 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "LootRush Partner Connect MCP API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "MCP",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Call an MCP tool",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://third-party.lootrush.com/mcp",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "JSON-RPC 2.0 endpoint for the MCP server. Set `method` to `tools/call` and `params.name` to one of `getAccountBalance`, `getAccountHistory`, `getUserCards`, `getUserCardTransactions`, `getCardRevealPublicKey`. Pick a tool from the request examples below. The tool's payload comes back as a JSON-encoded string in `result.content[0].text`. Every call is scoped to the API key's user — no tool takes an identity argument. Batch (array) bodies are rejected. `getUserCards` with `includeCardSecrets` reve"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,110 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "LootRush Partner Connect Withdrawals API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Withdrawals",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create withdrawal",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://third-party.lootrush.com/api/crypto/:userId/withdraw",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier of the user making the withdrawal."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Initiates a cryptocurrency withdrawal for a user. The withdrawal is created as a queued transaction and processed asynchronously."
+        },
+        {
+          "info": {
+            "name": "List withdrawals",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://third-party.lootrush.com/api/crypto/:userId/withdraws",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier of the user whose withdrawals to retrieve."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page number (1-indexed)."
+              },
+              {
+                "name": "perPage",
+                "value": "",
+                "type": "query",
+                "description": "Results per page."
+              },
+              {
+                "name": "bulkId",
+                "value": "",
+                "type": "query",
+                "description": "Filter by bulk payment ID."
+              },
+              {
+                "name": "transactionHash",
+                "value": "",
+                "type": "query",
+                "description": "Filter by blockchain transaction hash."
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter by withdrawal status."
+              },
+              {
+                "name": "externalId",
+                "value": "",
+                "type": "query",
+                "description": "Filter by the external identifier you provided."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Retrieves a paginated list of withdrawal transactions for a user, with optional filters."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

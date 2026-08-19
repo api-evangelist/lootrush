@@ -1,0 +1,457 @@
+{
+  "item": [
+    {
+      "id": "2e344b23-cf42-4114-b981-2f88e7a9ab1e",
+      "name": "History",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "a6e36166-f1eb-495c-ac24-21a9457a0ea0",
+          "name": "Get user history",
+          "request": {
+            "name": "Get user history",
+            "description": {
+              "content": "Retrieves transaction and activity history for the authenticated user. The user is inferred from the API key; no userId is passed. Choose the data set with `resource` + `feature`. Rate limited to 2 requests every 2 seconds per user.",
+              "type": "text/plain"
+            },
+            "url": {
+              "protocol": "https",
+              "path": [
+                "api",
+                "history"
+              ],
+              "host": [
+                "history-api",
+                "lootrush",
+                "com"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "resource",
+                  "value": "<string>",
+                  "description": "(Required) Resource type to query."
+                },
+                {
+                  "disabled": false,
+                  "key": "feature",
+                  "value": "<string>",
+                  "description": "(Required) Feature to retrieve. For account: account (all activity), account-onramp (deposits), account-offramp (withdrawals), account-swap (converts), account-crypto (crypto transfers / sends), account-portifolio (portfolio activity). For cards: cards-transactions, cards-summary, cards-balance."
+                },
+                {
+                  "disabled": false,
+                  "key": "currentPage",
+                  "value": "0",
+                  "description": "Page number (0-indexed)."
+                },
+                {
+                  "disabled": false,
+                  "key": "pageSize",
+                  "value": "10",
+                  "description": "Items per page."
+                },
+                {
+                  "disabled": false,
+                  "key": "startDate",
+                  "value": "<dateTime>",
+                  "description": "Start of the date window (ISO 8601)."
+                },
+                {
+                  "disabled": false,
+                  "key": "endDate",
+                  "value": "<dateTime>",
+                  "description": "End of the date window (ISO 8601)."
+                },
+                {
+                  "disabled": false,
+                  "key": "filterByText",
+                  "value": "<string>",
+                  "description": "Text filter for card transactions (merchant, description)."
+                },
+                {
+                  "disabled": false,
+                  "key": "asOf",
+                  "value": "<dateTime>",
+                  "description": "Snapshot date (ISO 8601). Used mainly with cards-summary."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "45f12758-98f0-4487-bd03-edfe30988e6d",
+              "name": "History payload. Shape depends on resource + feature (account history nodes, card transactions, card snapshots, or balance movements).",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "api",
+                    "history"
+                  ],
+                  "host": [
+                    "history-api",
+                    "lootrush",
+                    "com"
+                  ],
+                  "query": [
+                    {
+                      "key": "resource",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "feature",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "currentPage",
+                      "value": "0"
+                    },
+                    {
+                      "key": "pageSize",
+                      "value": "10"
+                    },
+                    {
+                      "key": "startDate",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "endDate",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "filterByText",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "asOf",
+                      "value": "<dateTime>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "68293f7d-8803-456d-bfba-0c14f2c2a70c",
+              "name": "Invalid resource/feature combination or query params.",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "api",
+                    "history"
+                  ],
+                  "host": [
+                    "history-api",
+                    "lootrush",
+                    "com"
+                  ],
+                  "query": [
+                    {
+                      "key": "resource",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "feature",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "currentPage",
+                      "value": "0"
+                    },
+                    {
+                      "key": "pageSize",
+                      "value": "10"
+                    },
+                    {
+                      "key": "startDate",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "endDate",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "filterByText",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "asOf",
+                      "value": "<dateTime>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3855449a-9494-47b3-bbdc-d829a11f69c7",
+              "name": "Invalid or missing API token, or user not allowed.",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "api",
+                    "history"
+                  ],
+                  "host": [
+                    "history-api",
+                    "lootrush",
+                    "com"
+                  ],
+                  "query": [
+                    {
+                      "key": "resource",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "feature",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "currentPage",
+                      "value": "0"
+                    },
+                    {
+                      "key": "pageSize",
+                      "value": "10"
+                    },
+                    {
+                      "key": "startDate",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "endDate",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "filterByText",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "asOf",
+                      "value": "<dateTime>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e63bc28d-2c22-4f36-a999-5fc2f09d3b18",
+              "name": "Rate limit exceeded (2 requests / 2 seconds per user).",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "api",
+                    "history"
+                  ],
+                  "host": [
+                    "history-api",
+                    "lootrush",
+                    "com"
+                  ],
+                  "query": [
+                    {
+                      "key": "resource",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "feature",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "currentPage",
+                      "value": "0"
+                    },
+                    {
+                      "key": "pageSize",
+                      "value": "10"
+                    },
+                    {
+                      "key": "startDate",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "endDate",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "filterByText",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "asOf",
+                      "value": "<dateTime>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://third-party.lootrush.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "5324935b-d966-479c-af7d-72b53d37607c",
+    "name": "LootRush Partner Connect History API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "REST endpoints for LootRush partner integrations: crypto withdrawals, transaction history, and OAuth-style user data access.",
+      "type": "text/plain"
+    }
+  }
+}

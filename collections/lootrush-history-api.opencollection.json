@@ -1,0 +1,89 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "LootRush Partner Connect History API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "History",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get user history",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://third-party.lootrush.com/api/history",
+            "params": [
+              {
+                "name": "resource",
+                "value": "",
+                "type": "query",
+                "description": "Resource type to query."
+              },
+              {
+                "name": "feature",
+                "value": "",
+                "type": "query",
+                "description": "Feature to retrieve. For account: account (all activity), account-onramp (deposits), account-offramp (withdrawals), account-swap (converts), account-crypto (crypto transfers / sends), account-portifolio (portfolio activity). For cards: cards-transactions, cards-summary, cards-balance."
+              },
+              {
+                "name": "currentPage",
+                "value": "",
+                "type": "query",
+                "description": "Page number (0-indexed)."
+              },
+              {
+                "name": "pageSize",
+                "value": "",
+                "type": "query",
+                "description": "Items per page."
+              },
+              {
+                "name": "startDate",
+                "value": "",
+                "type": "query",
+                "description": "Start of the date window (ISO 8601)."
+              },
+              {
+                "name": "endDate",
+                "value": "",
+                "type": "query",
+                "description": "End of the date window (ISO 8601)."
+              },
+              {
+                "name": "filterByText",
+                "value": "",
+                "type": "query",
+                "description": "Text filter for card transactions (merchant, description)."
+              },
+              {
+                "name": "asOf",
+                "value": "",
+                "type": "query",
+                "description": "Snapshot date (ISO 8601). Used mainly with cards-summary."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Retrieves transaction and activity history for the authenticated user. The user is inferred from the API key; no userId is passed. Choose the data set with `resource` + `feature`. Rate limited to 2 requests every 2 seconds per user."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

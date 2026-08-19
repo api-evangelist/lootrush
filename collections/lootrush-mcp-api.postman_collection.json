@@ -1,0 +1,370 @@
+{
+  "item": [
+    {
+      "id": "82983363-3d45-4067-bb20-a6102e25945d",
+      "name": "MCP",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "45f380b6-c6e0-4edf-beee-b3acb78e38d0",
+          "name": "Call an MCP tool",
+          "request": {
+            "name": "Call an MCP tool",
+            "description": {
+              "content": "JSON-RPC 2.0 endpoint for the MCP server. Set `method` to `tools/call` and `params.name` to one of `getAccountBalance`, `getAccountHistory`, `getUserCards`, `getUserCardTransactions`, `getCardRevealPublicKey`. Pick a tool from the request examples below. The tool's payload comes back as a JSON-encoded string in `result.content[0].text`. Every call is scoped to the API key's user — no tool takes an identity argument. Batch (array) bodies are rejected. `getUserCards` with `includeCardSecrets` reveals a card's PAN/CVV **encrypted** (the server never decrypts) and needs a `sessionId` built from `getCardRevealPublicKey`.",
+              "type": "text/plain"
+            },
+            "url": {
+              "protocol": "https",
+              "path": [
+                "mcp"
+              ],
+              "host": [
+                "mcp",
+                "lootrush",
+                "com"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jsonrpc\": \"<string>\",\n  \"method\": \"<string>\",\n  \"params\": {\n    \"name\": \"<string>\",\n    \"arguments\": \"<object>\"\n  },\n  \"id\": \"<integer>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "a1537757-c55e-4708-a5b4-db5c8cdcceb6",
+              "name": "JSON-RPC result. The tool payload is a JSON-encoded string in `result.content[0].text` (decoded and shown below for getAccountBalance).",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "mcp"
+                  ],
+                  "host": [
+                    "mcp",
+                    "lootrush",
+                    "com"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"method\": \"tools/call\",\n  \"params\": {\n    \"name\": \"getAccountBalance\",\n    \"arguments\": {}\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"result\": {\n    \"content\": [\n      {\n        \"type\": \"text\",\n        \"text\": \"{\\\"currency\\\":\\\"USD\\\",\\\"totalUsdValue\\\":\\\"1530.42\\\",\\\"holdingUsdValue\\\":\\\"1200.00\\\",\\\"stakedUsdValue\\\":\\\"300.42\\\",\\\"tokenizedAssetsUsdValue\\\":\\\"30.00\\\",\\\"tokenizedAssetsPnl\\\":\\\"-4.15\\\",\\\"byToken\\\":[{\\\"token\\\":\\\"USDC\\\",\\\"network\\\":\\\"polygon\\\",\\\"isStake\\\":false,\\\"amount\\\":\\\"1200.00\\\",\\\"balanceUsd\\\":\\\"1200.00\\\"},{\\\"token\\\":\\\"CUSDO\\\",\\\"network\\\":\\\"ethereum\\\",\\\"isStake\\\":true,\\\"amount\\\":\\\"300.00\\\",\\\"balanceUsd\\\":\\\"300.42\\\"}],\\\"lastFetchedAt\\\":\\\"2026-07-16T18:20:00.000Z\\\",\\\"isStale\\\":false}\"\n      }\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c5f4bbbb-337a-46b3-8149-5eadc7b0ec89",
+              "name": "Batch requests are not supported (one message per POST).",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "mcp"
+                  ],
+                  "host": [
+                    "mcp",
+                    "lootrush",
+                    "com"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"method\": \"tools/call\",\n  \"params\": {\n    \"name\": \"getAccountBalance\",\n    \"arguments\": {}\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"jsonrpc\": \"2.0\",\n  \"error\": {\n    \"code\": -32600,\n    \"message\": \"Batch requests are not supported.\"\n  },\n  \"id\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c14fc044-13b1-43fd-8831-cd4dabe0bafd",
+              "name": "Missing, invalid, or expired API key.",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "mcp"
+                  ],
+                  "host": [
+                    "mcp",
+                    "lootrush",
+                    "com"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"method\": \"tools/call\",\n  \"params\": {\n    \"name\": \"getAccountBalance\",\n    \"arguments\": {}\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"jsonrpc\": \"2.0\",\n  \"error\": {\n    \"code\": -32001,\n    \"message\": \"Unauthorized\"\n  },\n  \"id\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d6f77f81-8c8c-4c04-88dc-ce27089b3c5c",
+              "name": "Valid key, but it lacks the required scope (`mcp`, or `mcp_card_reveal` for a reveal), or the request's IP is not in the key's allowlist (`-32004`).",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "mcp"
+                  ],
+                  "host": [
+                    "mcp",
+                    "lootrush",
+                    "com"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"method\": \"tools/call\",\n  \"params\": {\n    \"name\": \"getAccountBalance\",\n    \"arguments\": {}\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"jsonrpc\": \"2.0\",\n  \"error\": {\n    \"code\": -32003,\n    \"message\": \"This API key is not authorized for the MCP (missing the mcp scope).\"\n  },\n  \"id\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4e48cb2a-8b1a-4010-9c92-b196887b8a87",
+              "name": "Rate limit exceeded (60 requests / 10 seconds per user).",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "mcp"
+                  ],
+                  "host": [
+                    "mcp",
+                    "lootrush",
+                    "com"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"method\": \"tools/call\",\n  \"params\": {\n    \"name\": \"getAccountBalance\",\n    \"arguments\": {}\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"jsonrpc\": \"2.0\",\n  \"error\": {\n    \"code\": -32005,\n    \"message\": \"Rate limit exceeded\"\n  },\n  \"id\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://third-party.lootrush.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "12d601e8-532c-408c-9cf6-3ee42a2cf1cf",
+    "name": "LootRush Partner Connect MCP API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "REST endpoints for LootRush partner integrations: crypto withdrawals, transaction history, and OAuth-style user data access.",
+      "type": "text/plain"
+    }
+  }
+}

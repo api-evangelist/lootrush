@@ -1,0 +1,397 @@
+{
+  "item": [
+    {
+      "id": "1aaf1ca5-b008-4c1c-8078-384332566e0e",
+      "name": "Connect",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "f8cf4b0d-9e1c-4aeb-b840-0a35f000bd7f",
+          "name": "Get consented user data",
+          "request": {
+            "name": "Get consented user data",
+            "description": {
+              "content": "Retrieves user data for a granted consent. Authenticated with an integration API key via the x-api-key header, not a bearer token.",
+              "type": "text/plain"
+            },
+            "url": {
+              "protocol": "https",
+              "path": [
+                "api",
+                "v1",
+                "consent",
+                ":consentId",
+                "user"
+              ],
+              "host": [
+                "third-party",
+                "lootrush",
+                "com"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "consentId",
+                  "description": "(Required) Consent ID received after the user granted access."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "x-api-key"
+                },
+                {
+                  "key": "value",
+                  "value": "{{apiKey}}"
+                },
+                {
+                  "key": "in",
+                  "value": "header"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "19ce9314-d3c9-4ae4-8dae-ff2ca79c119a",
+              "name": "Consented user data.",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "api",
+                    "v1",
+                    "consent",
+                    ":consentId",
+                    "user"
+                  ],
+                  "host": [
+                    "third-party",
+                    "lootrush",
+                    "com"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "consentId",
+                      "description": "(Required) Consent ID received after the user granted access."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"consent_id\": \"d43d96f3-dd1f-08e4-0866-562451ea1134\",\n  \"integration_id\": \"48bf7ade-d99c-a50b-0af3-58ee9871e821\",\n  \"granted_at\": \"2001-07-15T00:07:32.532Z\",\n  \"scopes\": [\n    \"profile\",\n    \"profile\"\n  ],\n  \"user\": {\n    \"profile\": {\n      \"name\": \"string\",\n      \"given_name\": \"string\",\n      \"family_name\": \"string\"\n    },\n    \"email\": {\n      \"address\": \"zXEZ0@ejwUcpWDuHNhwzXBttuCXSXvFofY.pp\",\n      \"verified\": true\n    },\n    \"wallet\": {\n      \"addresses\": [\n        {\n          \"chain\": \"polygon\",\n          \"address\": \"string\"\n        },\n        {\n          \"chain\": \"base\",\n          \"address\": \"string\"\n        }\n      ],\n      \"is_business\": true\n    },\n    \"kyc\": {\n      \"email\": \"string\",\n      \"entity_type\": \"business\",\n      \"first_name\": \"string\",\n      \"last_name\": \"string\",\n      \"legal_name\": \"string\",\n      \"document_type\": \"string\",\n      \"document_number\": \"string\",\n      \"tax_id\": \"string\"\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "49936f67-4473-4baf-b49c-f7770410751f",
+              "name": "Invalid or missing API key.",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "api",
+                    "v1",
+                    "consent",
+                    ":consentId",
+                    "user"
+                  ],
+                  "host": [
+                    "third-party",
+                    "lootrush",
+                    "com"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "consentId",
+                      "description": "(Required) Consent ID received after the user granted access."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "03883bf1-41aa-4db2-b971-4d44a36643e4",
+              "name": "The consent belongs to a different integration.",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "api",
+                    "v1",
+                    "consent",
+                    ":consentId",
+                    "user"
+                  ],
+                  "host": [
+                    "third-party",
+                    "lootrush",
+                    "com"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "consentId",
+                      "description": "(Required) Consent ID received after the user granted access."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5baf0c80-7842-4515-a83d-50b940652f20",
+              "name": "Consent not found.",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "api",
+                    "v1",
+                    "consent",
+                    ":consentId",
+                    "user"
+                  ],
+                  "host": [
+                    "third-party",
+                    "lootrush",
+                    "com"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "consentId",
+                      "description": "(Required) Consent ID received after the user granted access."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b1daa4e8-bb1b-4997-84e3-19960fd4eee0",
+              "name": "Consent has been revoked.",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "api",
+                    "v1",
+                    "consent",
+                    ":consentId",
+                    "user"
+                  ],
+                  "host": [
+                    "third-party",
+                    "lootrush",
+                    "com"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "consentId",
+                      "description": "(Required) Consent ID received after the user granted access."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Gone",
+              "code": 410,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"Gone: Consent has been revoked\",\n  \"revoked_at\": \"1954-05-25T15:45:54.335Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://third-party.lootrush.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "88ca76d8-e65a-4144-a774-19f3fb965640",
+    "name": "LootRush Partner Connect API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "REST endpoints for LootRush partner integrations: crypto withdrawals, transaction history, and OAuth-style user data access.",
+      "type": "text/plain"
+    }
+  }
+}
