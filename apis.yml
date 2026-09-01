@@ -59,7 +59,7 @@ tags_raw:
 - Withdrawals
 - MCP
 - API
-image: https://www.lootrush.com/favicon.ico
+image: ''
 apis:
 - aid: lootrush:lootrush-connect-api
   name: LootRush Connect API
