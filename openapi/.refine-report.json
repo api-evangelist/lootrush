@@ -1,10 +1,7 @@
 {
   "provider": "lootrush",
   "sources": [
-    "lootrush-connect-api-openapi.yml",
-    "lootrush-history-api-openapi.yml",
-    "lootrush-mcp-api-openapi.yml",
-    "lootrush-withdrawals-api-openapi.yml"
+    "_original/lootrush-openapi-original.json"
   ],
   "outputs": [
     "lootrush-connect-api-openapi.yml",
@@ -15,6 +12,19 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "lootrush-openapi-original.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "lootrush-openapi-original.json: declared missing tag: Connect",
+    "lootrush-openapi-original.json: declared missing tag: History",
+    "lootrush-openapi-original.json: declared missing tag: MCP",
+    "lootrush-openapi-original.json: declared missing tag: Withdrawals",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "lootrush-connect-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "lootrush-history-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "lootrush-mcp-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "lootrush-withdrawals-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }
