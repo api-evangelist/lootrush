@@ -218,6 +218,26 @@ paths:
                 id: null
 components:
   schemas:
+    JsonRpcError:
+      type: object
+      properties:
+        jsonrpc:
+          type: string
+          enum:
+          - '2.0'
+        id:
+          type:
+          - integer
+          - 'null'
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+              example: -32001
+            message:
+              type: string
+              example: Unauthorized
     McpCall:
       type: object
       required:
@@ -253,26 +273,6 @@ components:
             arguments:
               type: object
               description: Tool arguments (empty for getAccountBalance / getCardRevealPublicKey). getUserCards optionally takes cardId + cardIssuerUserId + includeCardSecrets + sessionId to reveal a card's encrypted PAN/CVV. See the MCP Server guide for each tool's parameters.
-    JsonRpcError:
-      type: object
-      properties:
-        jsonrpc:
-          type: string
-          enum:
-          - '2.0'
-        id:
-          type:
-          - integer
-          - 'null'
-        error:
-          type: object
-          properties:
-            code:
-              type: integer
-              example: -32001
-            message:
-              type: string
-              example: Unauthorized
     McpResult:
       type: object
       properties:
