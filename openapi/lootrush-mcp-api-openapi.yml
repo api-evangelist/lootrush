@@ -218,7 +218,7 @@ paths:
                 id: null
 components:
   schemas:
-    JsonRpcError:
+    McpResult:
       type: object
       properties:
         jsonrpc:
@@ -226,18 +226,25 @@ components:
           enum:
           - '2.0'
         id:
-          type:
-          - integer
-          - 'null'
-        error:
+          type: integer
+        result:
           type: object
           properties:
-            code:
-              type: integer
-              example: -32001
-            message:
-              type: string
-              example: Unauthorized
+            content:
+              type: array
+              items:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    enum:
+                    - text
+                  text:
+                    type: string
+                    description: The tool payload, JSON-encoded.
+            isError:
+              type: boolean
+              description: Present and true when the tool returned a handled error (e.g. "No transaction found").
     McpCall:
       type: object
       required:
@@ -273,7 +280,7 @@ components:
             arguments:
               type: object
               description: Tool arguments (empty for getAccountBalance / getCardRevealPublicKey). getUserCards optionally takes cardId + cardIssuerUserId + includeCardSecrets + sessionId to reveal a card's encrypted PAN/CVV. See the MCP Server guide for each tool's parameters.
-    McpResult:
+    JsonRpcError:
       type: object
       properties:
         jsonrpc:
@@ -281,25 +288,18 @@ components:
           enum:
           - '2.0'
         id:
-          type: integer
-        result:
+          type:
+          - integer
+          - 'null'
+        error:
           type: object
           properties:
-            content:
-              type: array
-              items:
-                type: object
-                properties:
-                  type:
-                    type: string
-                    enum:
-                    - text
-                  text:
-                    type: string
-                    description: The tool payload, JSON-encoded.
-            isError:
-              type: boolean
-              description: Present and true when the tool returned a handled error (e.g. "No transaction found").
+            code:
+              type: integer
+              example: -32001
+            message:
+              type: string
+              example: Unauthorized
   securitySchemes:
     bearerAuth:
       type: http
