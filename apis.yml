@@ -44,6 +44,9 @@ accessModel:
 specificationVersion: '0.23'
 created: '2026-07-17'
 modified: '2026-07-20'
+x-docs-platform: mintlify
+x-docs-platform-confidence: medium
+x-docs-platform-checked: 2026-10-03
 tags:
 - Company
 - Gaming
