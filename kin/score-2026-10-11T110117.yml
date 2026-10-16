@@ -1,21 +1,19 @@
-# Kin Score artifact — lootrush — 2026-09-06T211804
+# Kin Score artifact — lootrush — 2026-10-11T110117
 # The API Evangelist rating (https://github.com/api-evangelist/kin-score). Generated; do not edit.
 ---
 kin_score:
   slug: lootrush
-  schema_version: 0.19.0
-  scored_at: '2026-09-06'
-  run_ts: 2026-09-06T211804
-  composite: 33.0
+  schema_version: 0.23.0
+  scored_at: '2026-10-11'
+  run_ts: 2026-10-11T110117
+  composite: 33.9
   band: thin
   facets:
-    discoverability: 72.2
-    contract_quality: 56.1
-    governance: 4.5
+    discoverability: 71.7
+    contract_quality: 50.5
+    contract_governance: 4.5
     operational_transparency: 21.1
     developer_ergonomics: 47.0
-    commercial_clarity: 0.0
-    contract_governance: 4.5
     access_clarity: 0.0
   agent_readiness:
     score: 40.1
@@ -45,7 +43,7 @@ kin_score:
     applies: true
     regime: Payments
     regime_id: payments
-    score: 26.6
+    score: 15.2
     matched_via: tags
   provenance:
     mcp: first-party
