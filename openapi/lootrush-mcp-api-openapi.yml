@@ -218,33 +218,6 @@ paths:
                 id: null
 components:
   schemas:
-    McpResult:
-      type: object
-      properties:
-        jsonrpc:
-          type: string
-          enum:
-          - '2.0'
-        id:
-          type: integer
-        result:
-          type: object
-          properties:
-            content:
-              type: array
-              items:
-                type: object
-                properties:
-                  type:
-                    type: string
-                    enum:
-                    - text
-                  text:
-                    type: string
-                    description: The tool payload, JSON-encoded.
-            isError:
-              type: boolean
-              description: Present and true when the tool returned a handled error (e.g. "No transaction found").
     McpCall:
       type: object
       required:
@@ -300,6 +273,33 @@ components:
             message:
               type: string
               example: Unauthorized
+    McpResult:
+      type: object
+      properties:
+        jsonrpc:
+          type: string
+          enum:
+          - '2.0'
+        id:
+          type: integer
+        result:
+          type: object
+          properties:
+            content:
+              type: array
+              items:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    enum:
+                    - text
+                  text:
+                    type: string
+                    description: The tool payload, JSON-encoded.
+            isError:
+              type: boolean
+              description: Present and true when the tool returned a handled error (e.g. "No transaction found").
   securitySchemes:
     bearerAuth:
       type: http
